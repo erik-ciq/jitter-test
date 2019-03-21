@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
+const { mouseDown, mouseUp, mouseMove } = require('./events')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -10,6 +11,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
     webPreferences: {
       nodeIntegration: true
     }
@@ -27,7 +29,9 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-  })
+  });
+  ipcMain.on('mouseMove', (event, data) => mouseMove(mainWindow, event, data));
+  ipcMain.on('mouseDown', (event, data) => mouseDown(mainWindow, event, data));
 }
 
 // This method will be called when Electron has finished
