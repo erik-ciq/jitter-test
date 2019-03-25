@@ -4,12 +4,18 @@ const electron = require('electron');
 
 module.exports = {
     mouseDown: (window, event, data) => {
-        startMousePosition = electron.screen.getCursorScreenPoint();
-        startWindowLocation = window.getBounds();
+        // console.log('la')
+        // startMousePosition = electron.screen.getCursorScreenPoint();
+        // startWindowLocation = window.getBounds();
         event.sender.send(`${data.responseChannel}`, 'done');
     },
 
     mouseMove: (window, event, data) => {
+        console.log('wooooo');
+        if (!startMousePosition) {
+            startWindowLocation = window.getBounds();
+            return startMousePosition = electron.screen.getCursorScreenPoint();
+        }
         // get current mouse x and y position
         const currentMousePosition = electron.screen.getCursorScreenPoint();
         // get the difference between start and end mouse position

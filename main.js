@@ -30,7 +30,9 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   });
-  ipcMain.on('mouseMove', (event, data) => mouseMove(mainWindow, event, data));
+
+  mainWindow.on('will-move', (event, newBounds) => mouseMove(mainWindow, event, newBounds));
+  // ipcMain.on('mouseMove', (event, data) => mouseMove(mainWindow, event, data));
   ipcMain.on('mouseDown', (event, data) => mouseDown(mainWindow, event, data));
 }
 
