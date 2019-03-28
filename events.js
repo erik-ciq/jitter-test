@@ -5,9 +5,10 @@ let counter = 0;
 const electron = require('electron');
 const bus = require('./bus');
 const mouseDown = window => {
-    log.warn('mouseDown');
     startMousePosition = electron.screen.getCursorScreenPoint();
     startWindowLocation = window.getBounds();
+    console.log('\n\n');
+    log.warn('mouseDown', startWindowLocation, '\n');
 };
 
 const mouseUp = window => {
@@ -29,14 +30,10 @@ const setBounds = (window, event, newBounds) => {
     window.setBounds(newBounds);
     const { height, width, x, y } = window.getBounds();
     log.warn('getBounds', { counter, height, width, x, y }, '\n');
-    isMoving = false;
 };
 
 const moveEvent = (window, event, data) => {
     event ? event.preventDefault() : null;
-    // if (isMoving) {
-    //     return;
-    // }
     isMoving = true;
     counter++;
     const timestamp = lastTimestamp = new Date().getTime();
@@ -54,12 +51,13 @@ const moveEvent = (window, event, data) => {
     // const bounds = lastBounds = { counter, height, width, x, y, timestamp }; // timestamp not necessary, messes with output
     const bounds = lastBounds = { counter, height, width, x, y };
     log.warn('moveEvent', bounds);
-    
     // respond on the provided channel
     bus.sendEvent('bounds-changing', bounds);
     /** always set bounds here to fix bug */
-    // window.setBounds(bounds);
+    window.setBounds(bounds);
     /** end skip roundtrip block */
+
+
 };
 module.exports = {
     mouseDown,
