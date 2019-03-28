@@ -4,7 +4,7 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron --inspect=5858 --remote-debugging-port=9090 ."
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "electron-log": "^3.0.4",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1"
   }
 }

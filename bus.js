@@ -27,6 +27,7 @@ module.exports = {
         }
         const sendList = Object.keys(listeners[topic]);
         const payload = { topic, data };
+        log.warn('sending e', payload.data);
         sendList.forEach(key => listeners[topic][key].sender.send('systemResponse', payload));
     }
 }
