@@ -6,15 +6,13 @@ const log = require('electron-log');
 let responseChannel = 0;
 
 const onBoundsChanging = newBounds => {
-    const bounds = JSON.parse(JSON.stringify(newBounds));
-    log.warn('onBoundsChanging', bounds);
-    ipcRenderer.send('setBounds', bounds);
+    log.warn('onBoundsC', newBounds);
+    ipcRenderer.send('setBounds', newBounds);
 }
 
 const onBoundsChanged = newBounds => {
-    const bounds = JSON.parse(JSON.stringify(newBounds));
-    log.warn('onBoundsChanged', bounds);
-    ipcRenderer.send('setBounds', bounds);
+    log.warn('onBoundsC', newBounds);
+    ipcRenderer.send('setBounds', newBounds);
 }
 
 const handleResponse = (event, payload) => {
