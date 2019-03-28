@@ -1,10 +1,15 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 
-const { mouseDown, mouseUp, mouseMove } = require('./events')
+const { mouseDown, mouseUp, moveEvent, setBounds } = require('./events')
+global.log = require('electron-log');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
+const WINAPI = { // https://wiki.winehq.org/List_Of_Windows_Messages
+  WM_ENTERSIZEMOVE: 561,
+  WM_EXITSIZEMOVE: 562,
+}
 
 function createWindow () {
   // Create the browser window.
@@ -31,9 +36,10 @@ function createWindow () {
     mainWindow = null
   });
 
-  mainWindow.on('will-move', (event, newBounds) => mouseMove(mainWindow, event, newBounds));
-  // ipcMain.on('mouseMove', (event, data) => mouseMove(mainWindow, event, data));
-  ipcMain.on('mouseDown', (event, data) => mouseDown(mainWindow, event, data));
+  mainWindow.on('will-move', (event, newBounds) => moveEvent(mainWindow, event, newBounds));
+  mainWindow.hookWindowMessage(WINAPI.WM_ENTERSIZEMOVE, () => mouseDown(mainWindow));
+  mainWindow.hookWindowMessage(WINAPI.WM_EXITSIZEMOVE, () => mouseUp(mainWindow));
+  ipcMain.on('setBounds', (event, data) => setBounds(mainWindow, event, data));
 }
 
 // This method will be called when Electron has finished

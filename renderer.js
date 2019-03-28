@@ -2,36 +2,33 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const { ipcRenderer } = require('electron');
+const log = require('electron-log');
 let responseChannel = 0;
 
-/**
- * send mouseDown ipc message to main process
- */
-async function onMouseDown() {
-    responseChannel++;
-    ipcRenderer.send('mouseDown', { responseChannel });
-    await new Promise(resolve => { ipcRenderer.on(responseChannel, resolve) });
-    $(document).mousemove(onMouseMove);
-};
-
-/**
- * send mouseMove ipc message to main process
- */
-async function onMouseMove() {
-    responseChannel++;
-    ipcRenderer.send('mouseMove', { responseChannel });
-    await new Promise(resolve => { ipcRenderer.on(responseChannel, resolve) });
-};
-
-/**
- * remove mouse move listener on mouse up
- */
-async function onMouseUp() {
-    $(document).off('mousemove');
+const onBoundsChanging = newBounds => {
+    const bounds = JSON.parse(JSON.stringify(newBounds));
+    log.warn('onBoundsChanging', bounds);
+    ipcRenderer.send('setBounds', bounds);
 }
 
-$(document).ready(function () {
-    $(document).mousedown(onMouseDown);
-    $(document).mouseup(onMouseUp);
-});
+const onBoundsChanged = newBounds => {
+    const bounds = JSON.parse(JSON.stringify(newBounds));
+    log.warn('onBoundsChanged', bounds);
+    ipcRenderer.send('setBounds', bounds);
+}
 
+const handleResponse = (event, payload) => {
+    const { topic, data } = payload;
+    switch(topic) {
+        case 'bounds-changing':
+            onBoundsChanging(data);
+            break;
+        case 'bounds-changed':
+            onBoundsChanged(data);
+            break;
+    }
+}
+
+ipcRenderer.send('addListener', 'bounds-changing');
+// ipcRenderer.send('addListener', 'bounds-changed');
+ipcRenderer.on('systemResponse', handleResponse)
