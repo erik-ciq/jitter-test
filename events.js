@@ -30,10 +30,14 @@ const setBounds = (window, event, newBounds) => {
     window.setBounds(newBounds);
     const { height, width, x, y } = window.getBounds();
     log.warn('getBounds', { counter, height, width, x, y }, '\n');
+    isMoving = false;
 };
 
 const moveEvent = (window, event, data) => {
     event ? event.preventDefault() : null;
+    if (isMoving) {
+        return;
+    }
     isMoving = true;
     counter++;
     const timestamp = lastTimestamp = new Date().getTime();
