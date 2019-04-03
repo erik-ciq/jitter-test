@@ -17,6 +17,9 @@ const WINAPI = { // https://wiki.winehq.org/List_Of_Windows_Messages
   WM_EXITSIZEMOVE: 562,
   WM_WINDOWPOSCHANGED: 71,
   WM_WINDOWPOSCHANGING: 70,
+  WM_LBUTTONUP: 514,
+  WM_NCLBUTTONUP: 162,
+  WM_MOVING: 534,
 }
 
 function createWindow () {
@@ -45,15 +48,16 @@ function createWindow () {
     // debouncedMove(event, newBounds);
     moveEvent(mainWindow, event, newBounds);
   });
+  ipcMain.on('setBounds', (event, data) => setBounds(mainWindow, event, data));
   mainWindow.hookWindowMessage(WINAPI.WM_ENTERSIZEMOVE, () => mouseDown(mainWindow));
   mainWindow.hookWindowMessage(WINAPI.WM_EXITSIZEMOVE, () => mouseUp(mainWindow));
+
+  // mainWindow.hookWindowMessage(WINAPI.WM_LBUTTONUP, () => log.debug('Mouse up')); unnecessary
+  // mainWindow.hookWindowMessage(WINAPI.WM_NCLBUTTONUP, () => log.debug('Mouse up')); unnecessary
   // mainWindow.hookWindowMessage(WINAPI.WM_WINDOWPOSCHANGING, () => log.debug('winposc')); // unnecessary
   // mainWindow.hookWindowMessage(WINAPI.WM_WINDOWPOSCHANGED, () => log.debug('winposd')); // unnecessary
-  // mainWindow.on('move', e => log.debug('move')); // unnecessary
-  ipcMain.on('setBounds', (event, data) => setBounds(mainWindow, event, data));
-
-  
-  
+  // mainWindow.hookWindowMessage(WINAPI.WM_MOVING, () => log.debug('movingw')); // unnecessary
+  mainWindow.on('move', e => log.warn('move')); // unnecessary
   /** end finsemble electron adapter */
 }
 app.on('ready', createWindow)

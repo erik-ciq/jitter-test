@@ -26,7 +26,6 @@ const handleResponse = (event, payload) => {
             break;
     }
 }
-
 ipcRenderer.send('addListener', 'bounds-changing');
 // ipcRenderer.send('addListener', 'bounds-changed');
 ipcRenderer.on('systemResponse', handleResponse)
