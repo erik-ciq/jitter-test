@@ -57,7 +57,7 @@ function createWindow () {
   // mainWindow.hookWindowMessage(WINAPI.WM_WINDOWPOSCHANGING, () => log.debug('winposc')); // unnecessary
   // mainWindow.hookWindowMessage(WINAPI.WM_WINDOWPOSCHANGED, () => log.debug('winposd')); // unnecessary
   // mainWindow.hookWindowMessage(WINAPI.WM_MOVING, () => log.debug('movingw')); // unnecessary
-  mainWindow.on('move', e => log.warn('move')); // unnecessary
+  // mainWindow.on('move', e => log.warn('move')); // unnecessary
   /** end finsemble electron adapter */
 }
 app.on('ready', createWindow)
